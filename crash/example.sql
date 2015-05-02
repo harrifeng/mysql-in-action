@@ -510,3 +510,82 @@ SELECT prod_name FROM products WHERE prod_name REGEXP '^[0-9\\.]' ORDER BY prod_
 | 2 ton anvil  |
 +--------------+
 3 rows in set (0.01 sec)
+
+mysql> SELECT Concat(vend_name, ' (', vend_country, ')') FROM vendors ORDER BY vend_name;
+SELECT Concat(vend_name, ' (', vend_country, ')') FROM vendors ORDER BY vend_name;
++--------------------------------------------+
+| Concat(vend_name, ' (', vend_country, ')') |
++--------------------------------------------+
+| ACME (USA)                                 |
+| Anvils R Us (USA)                          |
+| Furball Inc. (USA)                         |
+| Jet Set (England)                          |
+| Jouets Et Ours (France)                    |
+| LT Supplies (USA)                          |
++--------------------------------------------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT Concat(vend_name, ' (', vend_country, ')') AS vend_title FROM vendors ORDER BY vend_name;
+SELECT Concat(vend_name, ' (', vend_country, ')') AS vend_title FROM vendors ORDER BY vend_name;
++-------------------------+
+| vend_title              |
++-------------------------+
+| ACME (USA)              |
+| Anvils R Us (USA)       |
+| Furball Inc. (USA)      |
+| Jet Set (England)       |
+| Jouets Et Ours (France) |
+| LT Supplies (USA)       |
++-------------------------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT prod_id, quantity, item_price FROM orderitems WHERE order_num = 20005;
+SELECT prod_id, quantity, item_price FROM orderitems WHERE order_num = 20005;
++---------+----------+------------+
+| prod_id | quantity | item_price |
++---------+----------+------------+
+| ANV01   |       10 |       5.99 |
+| ANV02   |        3 |       9.99 |
+| TNT2    |        5 |      10.00 |
+| FB      |        1 |      10.00 |
++---------+----------+------------+
+4 rows in set (0.01 sec)
+
+mysql> SELECT prod_id, quantity, item_price, quantity*item_price AS expanded_price FROM orderitems WHERE order_num = 20005;
+SELECT prod_id, quantity, item_price, quantity*item_price AS expanded_price FROM orderitems WHERE order_num = 20005;
++---------+----------+------------+----------------+
+| prod_id | quantity | item_price | expanded_price |
++---------+----------+------------+----------------+
+| ANV01   |       10 |       5.99 |          59.90 |
+| ANV02   |        3 |       9.99 |          29.97 |
+| TNT2    |        5 |      10.00 |          50.00 |
+| FB      |        1 |      10.00 |          10.00 |
++---------+----------+------------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT vend_name, Upper(vend_name) AS vend_name_upacase FROM vendors ORDER BY vend_name;
+SELECT vend_name, Upper(vend_name) AS vend_name_upacase FROM vendors ORDER BY vend_name;
++----------------+-------------------+
+| vend_name      | vend_name_upacase |
++----------------+-------------------+
+| ACME           | ACME              |
+| Anvils R Us    | ANVILS R US       |
+| Furball Inc.   | FURBALL INC.      |
+| Jet Set        | JET SET           |
+| Jouets Et Ours | JOUETS ET OURS    |
+| LT Supplies    | LT SUPPLIES       |
++----------------+-------------------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT cust_name, cust_contact FROM customers WHERE cust_contact = 'Y. Lie';
+SELECT cust_name, cust_contact FROM customers WHERE cust_contact = 'Y. Lie';
+Empty set (0.00 sec)
+
+mysql> SELECT cust_name, cust_contact FROM customers WHERE Soundex(cust_contact) = Soundex('Y. Lie');
+SELECT cust_name, cust_contact FROM customers WHERE Soundex(cust_contact) = Soundex('Y. Lie');
++-------------+--------------+
+| cust_name   | cust_contact |
++-------------+--------------+
+| Coyote Inc. | Y Lee        |
++-------------+--------------+
+1 row in set (0.00 sec)
