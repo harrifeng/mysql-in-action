@@ -589,3 +589,289 @@ SELECT cust_name, cust_contact FROM customers WHERE Soundex(cust_contact) = Soun
 | Coyote Inc. | Y Lee        |
 +-------------+--------------+
 1 row in set (0.00 sec)
+SELECT cust_id, order_num FROM orders WHERE order_date = '2005-09-01' ;
++---------+-----------+
+| cust_id | order_num |
++---------+-----------+
+|   10001 |     20005 |
++---------+-----------+
+SELECT cust_id, order_num, order_date FROM orders WHERE order_date = '2005-09-01' ;
++---------+-----------+---------------------+
+| cust_id | order_num | order_date          |
++---------+-----------+---------------------+
+|   10001 |     20005 | 2005-09-01 00:00:00 |
++---------+-----------+---------------------+
+SELECT cust_id, order_num, order_date FROM orders WHERE Date(order_date) = '2005-09-01' ;
++---------+-----------+---------------------+
+| cust_id | order_num | order_date          |
++---------+-----------+---------------------+
+|   10001 |     20005 | 2005-09-01 00:00:00 |
++---------+-----------+---------------------+
+SELECT cust_id, order_num, order_date FROM orders WHERE Date(order_date) BETWEEN '2005-09-01' AND '2005-09030';
+SELECT cust_id, order_num, order_date FROM orders WHERE Date(order_date) BETWEEN '2005-09-01' AND '2005-09-30';
+Ctrl-C -- exit!
++---------+-----------+---------------------+
+| cust_id | order_num | order_date          |
++---------+-----------+---------------------+
+|   10001 |     20005 | 2005-09-01 00:00:00 |
+|   10003 |     20006 | 2005-09-12 00:00:00 |
+|   10004 |     20007 | 2005-09-30 00:00:00 |
++---------+-----------+---------------------+
+SELECT cust_id, order_num, order_date FROM orders WHERE Year(order_date)= 2005 AND Month(order_date) = 9;
++---------+-----------+---------------------+
+| cust_id | order_num | order_date          |
++---------+-----------+---------------------+
+|   10001 |     20005 | 2005-09-01 00:00:00 |
+|   10003 |     20006 | 2005-09-12 00:00:00 |
+|   10004 |     20007 | 2005-09-30 00:00:00 |
++---------+-----------+---------------------+
+SELECT AVG(prod_price) AS avg_price FROM products;
++-----------+
+| avg_price |
++-----------+
+| 16.133571 |
++-----------+
+SELECT AVG(prod_price) AS avg_price FROM products WHERE vend_id = 1003;
++-----------+
+| avg_price |
++-----------+
+| 13.212857 |
++-----------+
+SELECT COUNT(*) AS num_cust FROM customers;
++----------+
+| num_cust |
++----------+
+|        5 |
++----------+
+SELECT COUNT(cust_email) AS num_cust FROM customers;
++----------+
+| num_cust |
++----------+
+|        3 |
++----------+
+SELECT MAX(prod_price) AS max_price FROM products;
++-----------+
+| max_price |
++-----------+
+|     55.00 |
++-----------+
+SELECT MIN(prod_price) AS min_price FROM products;
++-----------+
+| min_price |
++-----------+
+|      2.50 |
++-----------+
+SELECT SUM(quantity) AS items_ordered FROM orderitems WHERE order_num = 20005;
++---------------+
+| items_ordered |
++---------------+
+|            19 |
++---------------+
+SELECT AVG(prod_price) AS avg_price FROM products WHERE vend_id = 1003;
++-----------+
+| avg_price |
++-----------+
+| 13.212857 |
++-----------+
+SELECT AVG(DISTINCT prod_price) AS avg_price FROM products WHERE vend_id = 1003;
++-----------+
+| avg_price |
++-----------+
+| 15.998000 |
++-----------+
+SELECT COUNT(*) AS num_items, MIN(prod_price) AS price_min, MAX(prod_price) AS price_max, AVG(prod_price) AS price_avg FROM products;
++-----------+-----------+-----------+-----------+
+| num_items | price_min | price_max | price_avg |
++-----------+-----------+-----------+-----------+
+|        14 |      2.50 |     55.00 | 16.133571 |
++-----------+-----------+-----------+-----------+
+SELECT COUNT(*) AS num_prods FROM products WHERE vend_id = 1003;
++-----------+
+| num_prods |
++-----------+
+|         7 |
++-----------+
+SELECT vend_id, COUNT(*) AS num_prods FROM products GROUP BY vend_id;
++---------+-----------+
+| vend_id | num_prods |
++---------+-----------+
+|    1001 |         3 |
+|    1002 |         2 |
+|    1003 |         7 |
+|    1005 |         2 |
++---------+-----------+
+SELECT cust_id, COUNT(*) AS orders FROM orders GROUP BY cust_id HAVING COUNT(*) >= 2;
++---------+--------+
+| cust_id | orders |
++---------+--------+
+|   10001 |      2 |
++---------+--------+
+SELECT vend_id, COUNT(*) AS num_prods FROM products GROUP BY vend_id HAVING COUNT(*) >=3;
++---------+-----------+
+| vend_id | num_prods |
++---------+-----------+
+|    1001 |         3 |
+|    1003 |         7 |
++---------+-----------+
+SELECT vend_id, COUNT(*) AS num_prods FROM products WHERE prod_price >= 10 GROUP BY vend_id HAVING COUNT(*) >=2;
++---------+-----------+
+| vend_id | num_prods |
++---------+-----------+
+|    1003 |         4 |
+|    1005 |         2 |
++---------+-----------+
+SELECT vend_id, COUNT(*) AS num_prods FROM products GROUP BY vend_id HAVING COUNT(*) >=2;
++---------+-----------+
+| vend_id | num_prods |
++---------+-----------+
+|    1001 |         3 |
+|    1002 |         2 |
+|    1003 |         7 |
+|    1005 |         2 |
++---------+-----------+
+SELECT order_num, SUM(quantity * item_price) AS ordertotal FROM orderitems GROUP BY order_num HAVING SUM(quantity * item_price) >= 50 ORDER BY ordertotal;
++-----------+------------+
+| order_num | ordertotal |
++-----------+------------+
+|     20006 |      55.00 |
+|     20008 |     125.00 |
+|     20005 |     149.87 |
+|     20007 |    1000.00 |
++-----------+------------+
+SELECT order_num FROM orderitems WHERE prod_id = 'TNT2';
++-----------+
+| order_num |
++-----------+
+|     20005 |
+|     20007 |
++-----------+
+SELECT cust_id FROM orders WHERE order_num IN(20005, 20007);
++---------+
+| cust_id |
++---------+
+|   10001 |
+|   10004 |
++---------+
+SELECT cust_id FROM orders WHERE order_num IN (SELECT order_num FROM orderitems WHERE prod_id = 'TNT2');
++---------+
+| cust_id |
++---------+
+|   10001 |
+|   10004 |
++---------+
+SELECT cust_name, cust_state, (SELECT COUNT(*) FROM orders WHERE orders.cust_id = customers.cust_id) AS orders FROM customers ORDER BY cust_name;
++----------------+------------+--------+
+| cust_name      | cust_state | orders |
++----------------+------------+--------+
+| Coyote Inc.    | MI         |      2 |
+| E Fudd         | IL         |      1 |
+| Mouse House    | OH         |      0 |
+| Wascals        | IN         |      1 |
+| Yosemite Place | AZ         |      1 |
++----------------+------------+--------+
+SELECT vend_name, prod_name, prod_price FROM vendors, products WHERE vendors.vend_id = products.vend_id ORDER BY vend_name, prod_name;
++-------------+----------------+------------+
+| vend_name   | prod_name      | prod_price |
++-------------+----------------+------------+
+| ACME        | Bird seed      |      10.00 |
+| ACME        | Carrots        |       2.50 |
+| ACME        | Detonator      |      13.00 |
+| ACME        | Safe           |      50.00 |
+| ACME        | Sling          |       4.49 |
+| ACME        | TNT (1 stick)  |       2.50 |
+| ACME        | TNT (5 sticks) |      10.00 |
+| Anvils R Us | .5 ton anvil   |       5.99 |
+| Anvils R Us | 1 ton anvil    |       9.99 |
+| Anvils R Us | 2 ton anvil    |      14.99 |
+| Jet Set     | JetPack 1000   |      35.00 |
+| Jet Set     | JetPack 2000   |      55.00 |
+| LT Supplies | Fuses          |       3.42 |
+| LT Supplies | Oil can        |       8.99 |
++-------------+----------------+------------+
+SELECT vend_name, prod_name, prod_price FROM vendors INNER JOIN products ON vendors.vend_id = products.vend_id ORDER BY vend_name, prod_name;
++-------------+----------------+------------+
+| vend_name   | prod_name      | prod_price |
++-------------+----------------+------------+
+| ACME        | Bird seed      |      10.00 |
+| ACME        | Carrots        |       2.50 |
+| ACME        | Detonator      |      13.00 |
+| ACME        | Safe           |      50.00 |
+| ACME        | Sling          |       4.49 |
+| ACME        | TNT (1 stick)  |       2.50 |
+| ACME        | TNT (5 sticks) |      10.00 |
+| Anvils R Us | .5 ton anvil   |       5.99 |
+| Anvils R Us | 1 ton anvil    |       9.99 |
+| Anvils R Us | 2 ton anvil    |      14.99 |
+| Jet Set     | JetPack 1000   |      35.00 |
+| Jet Set     | JetPack 2000   |      55.00 |
+| LT Supplies | Fuses          |       3.42 |
+| LT Supplies | Oil can        |       8.99 |
++-------------+----------------+------------+
+SELECT prod_name, vend_name, prod_price, quantity FROM orderitems, vendors, products WHERE products.vend_id = vendors.vend_id AND orderitems.prod_id = products.prod_id AND order_num = 20005;
++----------------+-------------+------------+----------+
+| prod_name      | vend_name   | prod_price | quantity |
++----------------+-------------+------------+----------+
+| .5 ton anvil   | Anvils R Us |       5.99 |       10 |
+| 1 ton anvil    | Anvils R Us |       9.99 |        3 |
+| TNT (5 sticks) | ACME        |      10.00 |        5 |
+| Bird seed      | ACME        |      10.00 |        1 |
++----------------+-------------+------------+----------+
+SELECT cust_name, cust_contact FROM customers, orders, orderitems WHERE customers.cust_id = orders.cust_id AND orderitems.order_num = orders.order_num AND prod_id = 'TNT2';
++----------------+--------------+
+| cust_name      | cust_contact |
++----------------+--------------+
+| Coyote Inc.    | Y Lee        |
+| Yosemite Place | Y Sam        |
++----------------+--------------+
+SELECT cust_name, cust_contact FROM customers AS c, orders AS o, orderitems AS oi WHERE c.cust_id = o.cust_id AND oi.order_num = o.order_num AND prod_id = 'TNT2';
++----------------+--------------+
+| cust_name      | cust_contact |
++----------------+--------------+
+| Coyote Inc.    | Y Lee        |
+| Yosemite Place | Y Sam        |
++----------------+--------------+
+SELECT prod_id, prod_name FROM products WHERE vend_id = (SELECT vend_id FROM products WHERE prod_id = 'DTNTR');
++---------+----------------+
+| prod_id | prod_name      |
++---------+----------------+
+| DTNTR   | Detonator      |
+| FB      | Bird seed      |
+| FC      | Carrots        |
+| SAFE    | Safe           |
+| SLING   | Sling          |
+| TNT1    | TNT (1 stick)  |
+| TNT2    | TNT (5 sticks) |
++---------+----------------+
+SELECT p1.prod_id, p1.prod_name FROM products AS p1, products AS p2 WHERE p1.vend_id = p2.vend_id AND p2.prod_id = 'DTNTR';
++---------+----------------+
+| prod_id | prod_name      |
++---------+----------------+
+| DTNTR   | Detonator      |
+| FB      | Bird seed      |
+| FC      | Carrots        |
+| SAFE    | Safe           |
+| SLING   | Sling          |
+| TNT1    | TNT (1 stick)  |
+| TNT2    | TNT (5 sticks) |
++---------+----------------+
+SELECT customers.cust_id, orders.order_num FROM customers LEFT OUTER JOIN orders ON customers.cust_id = orders.cust_id;
++---------+-----------+
+| cust_id | order_num |
++---------+-----------+
+|   10001 |     20005 |
+|   10001 |     20009 |
+|   10002 |      NULL |
+|   10003 |     20006 |
+|   10004 |     20007 |
+|   10005 |     20008 |
++---------+-----------+
+SELECT customers.cust_id, orders.order_num FROM customers RIGHT OUTER JOIN orders ON customers.cust_id = orders.cust_id;
++---------+-----------+
+| cust_id | order_num |
++---------+-----------+
+|   10001 |     20005 |
+|   10001 |     20009 |
+|   10003 |     20006 |
+|   10004 |     20007 |
+|   10005 |     20008 |
++---------+-----------+
